@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context allowCasualMultipartParsing="true" path="/webserviceandroid" reloadable="false">
+  <WatchedResource>WEB-INF/web.xml</WatchedResource>
+  <Manager className="org.apache.catalina.session.PersistentManager" maxActiveSessions="-1" maxIdleBackup="-1" maxIdleSwap="-1" minIdleSwap="-1" saveOnRestart="false">
+    <Store className="org.apache.catalina.session.FileStore"/>
+  </Manager>
+  <Resources cacheMaxSize="10240000" cacheObjectMaxSize="512000" cachingAllowed="true"/>
+</Context>
