@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- arquivo de configuracao do javaserver faces-->
+<faces-config version="2.2"
+              xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+
+    <application>
+        <!-- define o arquivo de propriedades de mensagens-->
+        <message-bundle>
+            Messages
+        </message-bundle>
+        <!-- define a classe que ira limitar a quatidade de views por sessao-->
+       
+        
+        <!-- define a classe exception do primefaces para tratamento de execessao-->
+        <el-resolver>
+            org.primefaces.application.exceptionhandler.PrimeExceptionHandlerELResolver
+        </el-resolver>
+        <!-- define o locale padrao para portugues do brasil-->
+        <locale-config> 
+            <default-locale>pt_BR</default-locale> 
+        </locale-config> 
+        <!-- define um listenner para acooes em p:dialog-->
+        <action-listener>
+            org.primefaces.application.DialogActionListener
+        </action-listener>
+        <!-- define uma manipulacao de navegacao de p:dialog-->
+        <navigation-handler>
+            org.primefaces.application.DialogNavigationHandler
+        </navigation-handler>
+        <!-- define uma manipulacao de visualizacao do p:dialog -->
+        <view-handler>
+            org.primefaces.application.DialogViewHandler
+        </view-handler>
+    </application>
+    <!-- fabrica de excessoes do primefaces-->
+    <factory>
+        <exception-handler-factory>
+            org.primefaces.application.exceptionhandler.PrimeExceptionHandlerFactory
+        </exception-handler-factory>
+    </factory>
+    <!-- phaselistenner para gerenciar autorizacao-->
+     <lifecycle>  
+        <phase-listener>util.LoginFilter</phase-listener>  
+    </lifecycle> 
+        
+</faces-config>

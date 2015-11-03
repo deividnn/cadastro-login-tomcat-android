@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="/WEB-INF/restrito.xhtml">
+
+            <ui:define name="titulo">
+                BIBLIOTECA VIRTUAL ACADÊMICA. - Tipos de Usuario
+            </ui:define>
+
+            <ui:define name="conteudo">
+                <h:form id="tipoUsuario">
+                    <p:focus context="@form"/>
+                    <p:growl/>
+                    <!-- ##############################################################################################################################-->
+                    <p:panelGrid columns="10">
+
+                        <p:commandButton value="Novo"
+                                         icon="ui-icon-plus"
+                                         update="@form"
+                                         disabled="#{tipoUsuarioBean.novo}"
+                                         style="width: 70px;height: 30px;"
+                                         onstart="PF('statusDialog').show();"
+                                         onsuccess="PF('statusDialog').hide();"
+                                         oncomplete="javascript();"
+                                         actionListener="#{tipoUsuarioBean.novotipoUsuario()}">
+
+                        </p:commandButton>
+
+                        <p:commandButton value="Cancelar"
+                                         icon="ui-icon-cancel"
+                                         update="@form"
+                                         immediate="true"
+                                         disabled="#{tipoUsuarioBean.novo eq false}"
+                                         style="width: 70px;height: 30px;"
+                                         onstart="PF('statusDialog').show();"
+                                         onsuccess="PF('statusDialog').hide();"
+                                         oncomplete="javascript();atualizaTabela(220);"
+                                         actionListener="#{tipoUsuarioBean.cancelar()}"/>
+
+                        <p:commandButton value="Salvar"
+                                         icon="ui-icon-check"
+                                         update="@form"
+                                         disabled="#{tipoUsuarioBean.novo eq false}"
+                                         style="width: 70px;height: 30px;"
+                                         onstart="PF('statusDialog').show();"
+                                         onsuccess="PF('statusDialog').hide();"
+                                         oncomplete="javascript();"
+                                         actionListener="#{tipoUsuarioBean.salvar()}">
+                            <p:confirm header="Confirmação" message="Tem certeza?" icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:commandButton value="Editar"
+                                         icon="ui-icon-pencil"
+                                         update="@form"
+                                         immediate="true"
+                                         disabled="#{tipoUsuarioBean.novo eq false or usuarioBean.edicao}"
+                                         style="width: 70px;height: 30px;"
+                                         onstart="PF('statusDialog').show();"
+                                         onsuccess="PF('statusDialog').hide();"
+                                         oncomplete="javascript();"
+                                         actionListener="#{tipoUsuarioBean.editar()}"/>
+
+                        <p:commandButton value="Excluir"
+                                         icon="ui-icon-trash"
+                                         update="@form"
+                                         immediate="true"
+                                         disabled="#{tipoUsuarioBean.novo eq false or tipoUsuarioBean.tipoUsuario.id eq null}"
+                                         style="width: 70px;height: 30px;"
+                                         onstart="PF('statusDialog').show();"
+                                         onsuccess="PF('statusDialog').hide();"
+                                         oncomplete="javascript();"
+                                         actionListener="#{tipoUsuarioBean.excluir()}">
+                            <p:confirm header="Confirmação" message="Tem certeza?" icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                    </p:panelGrid>
+                    <!-- ##############################################################################################################################-->
+
+                    <p:panelGrid columns="4" rendered="#{tipoUsuarioBean.novo eq false}">
+                        <p:outputLabel value="Pesquisar:"/>
+                        <p:selectOneMenu value="#{tipoUsuarioBean.coluna}"
+                                         style="width: 170px">
+                            <p:ajax event="change"
+                                    oncomplete="javascript();"
+                                    process="@this"
+                                    onstart="PF('statusDialog').show();"
+                                    onsuccess="PF('statusDialog').hide();"/>
+                            <f:selectItems value="#{tipoUsuarioBean.colunas().entrySet()}"
+                                           var="c"
+                                           itemValue="#{c.value}"
+                                           itemLabel="#{c.key}"/>
+                        </p:selectOneMenu>
+                        <p:inputText value="#{tipoUsuarioBean.valor}"
+                                     maxlength="100"
+                                     size="70"
+                                     id="txt"
+                                     placeholder="Digite sua pesquisa aqui...">
+                            <p:ajax event="keyup"
+                                    oncomplete="javascript();atualizaTabela(220);"
+                                    listener="#{tipoUsuarioBean.pesquisar()}"/>
+                        </p:inputText>
+
+                    </p:panelGrid>
+                    <!-- ##############################################################################################################################-->
+
+                    <p:dataTable value="#{tipoUsuarioBean.tipoUsuarios}"
+                                 var="p"
+                                 id="lista"
+                                 rendered="#{tipoUsuarioBean.novo eq false}"
+                                 scrollable="true"
+                                 scrollHeight="300"
+                                 emptyMessage="nenhum tipo usuario"
+                                 rowKey="#{p.id}"
+                                 selection="#{tipoUsuarioBean.tipoUsuarioc}"
+                                 selectionMode="single">
+
+                        <p:ajax event="rowSelect"
+                                onstart="PF('statusDialog').show();"
+                                onsuccess="PF('statusDialog').hide();"
+                                oncomplete="javascript();"
+                                update="@form"
+                                listener="#{tipoUsuarioBean.setarTipoUsuario()}"/>
+
+                        <p:column headerText="Codigo" sortBy="#{p.id}" width="80">
+                            <h:outputText value="#{p.id}"/>
+                        </p:column>
+                        <p:column headerText="Descricao" sortBy="#{p.descricao}" >
+                            <h:outputText value="#{p.descricao}"/>
+                        </p:column>
+                       
+                    </p:dataTable>
+                    <!-- ##############################################################################################################################-->
+
+                    <p:panel header="TipoUsuario" rendered="#{tipoUsuarioBean.novo}">
+                        <p:panelGrid columns="2">
+                            <p:outputLabel value="Codigo:"
+                                           rendered="#{tipoUsuarioBean.tipoUsuario.id ne null}"/>
+                            <p:inputText value="#{tipoUsuarioBean.tipoUsuario.id}"
+                                         disabled="true"
+                                         rendered="#{tipoUsuarioBean.tipoUsuario.id ne null}"/>
+                            
+                            <p:outputLabel value="Descricao:" for="n"/>
+                            <p:inputText value="#{tipoUsuarioBean.tipoUsuario.descricao}"
+                                         maxlength="55"
+                                         size="45"
+                                         id="n"
+                                         disabled="#{tipoUsuarioBean.tipoUsuario.id ne null and usuarioBean.edicao eq false}"
+                                         styleClass="upper"/>
+                            
+                          
+                        </p:panelGrid>
+                    </p:panel>
+                </h:form>
+
+                <script>
+                    $(document).ready(function () {
+                        atualizaTabela(220);
+                        //$("#usuario:txt").focus();
+
+                    });
+                </script>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+
+</html>

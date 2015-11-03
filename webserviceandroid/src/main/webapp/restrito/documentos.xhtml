@@ -1,0 +1,310 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="/WEB-INF/restrito.xhtml">
+
+            <ui:define name="titulo">
+                BIBLIOTECA VIRTUAL ACADÊMICA. - Documentos
+            </ui:define>
+
+            <ui:define name="conteudo">
+                <h:form id="documento">
+                    <p:focus context="@form"/>
+                    <p:growl/>
+                    <!-- ##############################################################################################################################-->
+                    <p:panelGrid columns="10">
+
+                        <p:commandButton value="Novo"
+                                         icon="ui-icon-plus"
+                                         update="@form"
+                                         disabled="#{documentoBean.novo}"
+                                         style="width: 70px;height: 30px;"
+                                         onstart="PF('statusDialog').show();"
+                                         onsuccess="PF('statusDialog').hide();"
+                                         oncomplete="javascript();"
+                                         actionListener="#{documentoBean.novodocumento()}">
+
+                        </p:commandButton>
+
+                        <p:commandButton value="Cancelar"
+                                         icon="ui-icon-cancel"
+                                         update="@form"
+                                         immediate="true"
+                                         disabled="#{documentoBean.novo eq false}"
+                                         style="width: 70px;height: 30px;"
+                                         onstart="PF('statusDialog').show();"
+                                         onsuccess="PF('statusDialog').hide();"
+                                         oncomplete="javascript();atualizaTabela(220);"
+                                         actionListener="#{documentoBean.cancelar()}"/>
+
+                        <p:commandButton value="Salvar"
+                                         icon="ui-icon-check"
+                                         update="@form"
+                                         disabled="#{documentoBean.novo eq false}"
+                                         style="width: 70px;height: 30px;"
+                                         onstart="PF('statusDialog').show();"
+                                         onsuccess="PF('statusDialog').hide();"
+                                         oncomplete="javascript();"
+                                         actionListener="#{documentoBean.salvar()}">
+                            <p:confirm header="Confirmação" message="Tem certeza?" icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:commandButton value="Editar"
+                                         icon="ui-icon-pencil"
+                                         update="@form"
+                                         immediate="true"
+                                         disabled="#{documentoBean.novo eq false or documentoBean.edicao}"
+                                         style="width: 70px;height: 30px;"
+                                         onstart="PF('statusDialog').show();"
+                                         onsuccess="PF('statusDialog').hide();"
+                                         oncomplete="javascript();"
+                                         actionListener="#{documentoBean.editar()}"/>
+
+                        <p:commandButton value="Excluir"
+                                         icon="ui-icon-trash"
+                                         update="@form"
+                                         immediate="true"
+                                         disabled="#{documentoBean.novo eq false or documentoBean.documento.id eq null}"
+                                         style="width: 70px;height: 30px;"
+                                         onstart="PF('statusDialog').show();"
+                                         onsuccess="PF('statusDialog').hide();"
+                                         oncomplete="javascript();"
+                                         actionListener="#{documentoBean.excluir()}">
+                            <p:confirm header="Confirmação" message="Tem certeza?" icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                    </p:panelGrid>
+                    <!-- ##############################################################################################################################-->
+
+                    <p:panelGrid columns="4" rendered="#{documentoBean.novo eq false}">
+                        <p:outputLabel value="Pesquisar:"/>
+                        <p:selectOneMenu value="#{documentoBean.coluna}"
+                                         style="width: 170px">
+                            <p:ajax event="change"
+                                    oncomplete="javascript();"
+                                    process="@this"
+                                    onstart="PF('statusDialog').show();"
+                                    onsuccess="PF('statusDialog').hide();"/>
+                            <f:selectItems value="#{documentoBean.colunas().entrySet()}"
+                                           var="c"
+                                           itemValue="#{c.value}"
+                                           itemLabel="#{c.key}"/>
+                        </p:selectOneMenu>
+                        <p:inputText value="#{documentoBean.valor}"
+                                     maxlength="100"
+                                     size="70"
+                                     id="txt"
+                                     placeholder="Digite sua pesquisa aqui...">
+                            <p:ajax event="keyup"
+                                    oncomplete="javascript();atualizaTabela(220);"
+                                    listener="#{documentoBean.pesquisar()}"/>
+                        </p:inputText>
+
+                    </p:panelGrid>
+                    <!-- ##############################################################################################################################-->
+
+                    <p:dataTable value="#{documentoBean.documentos}"
+                                 var="p"
+                                 id="lista"
+                                 rendered="#{documentoBean.novo eq false}"
+                                 scrollable="true"
+                                 scrollHeight="300"
+                                 emptyMessage="nenhum documento"
+                                 rowKey="#{p.id}"
+                                 selection="#{documentoBean.documentoc}"
+                                 selectionMode="single">
+
+                        <p:ajax event="rowSelect"
+                                onstart="PF('statusDialog').show();"
+                                onsuccess="PF('statusDialog').hide();"
+                                oncomplete="javascript();"
+                                update="@form"
+                                listener="#{documentoBean.setarDocumento()}"/>
+
+                        <p:column headerText="Codigo" sortBy="#{p.id}" width="80">
+                            <h:outputText value="#{p.id}"/>
+                        </p:column>
+                        <p:column headerText="Titulo" sortBy="#{p.titulo}" >
+                            <h:outputText value="#{p.titulo}"/>
+                        </p:column>
+                        <p:column headerText="Autor" sortBy="#{p.autor}">
+                            <h:outputText value="#{p.autor}"/>
+                        </p:column>
+                        <p:column headerText="Tipo Documento" sortBy="#{p.tipoDocumento.descricao}">
+                            <h:outputText value="#{p.tipoDocumento.descricao}"/>
+                        </p:column>
+
+                    </p:dataTable>
+                    <!-- ##############################################################################################################################-->
+
+                    <p:panel header="Documento" rendered="#{documentoBean.novo}">
+                        <p:panelGrid columns="2">
+                            <p:outputLabel value="Codigo:"
+                                           rendered="#{documentoBean.documento.id ne null}"/>
+                            <p:inputText value="#{documentoBean.documento.id}"
+                                         disabled="true"
+                                         rendered="#{documentoBean.documento.id ne null}"/>
+
+                            <p:outputLabel value="Titulo:" for="n"/>
+                            <p:inputText value="#{documentoBean.documento.titulo}"
+                                         maxlength="50"
+                                         size="60"
+                                         id="n"
+                                         disabled="#{documentoBean.documento.id ne null and documentoBean.edicao eq false}"
+                                         styleClass="upper"/>
+
+                            <p:outputLabel value="Autor:" for="ne"/>
+                            <p:inputText value="#{documentoBean.documento.autor}"
+                                         maxlength="30"
+                                         size="40"
+                                         id="ne"
+                                         styleClass="upper"
+                                         disabled="#{documentoBean.documento.id ne null and documentoBean.edicao eq false}"
+                                         />
+
+                            <p:outputLabel value="Descricao:" for="dne"/>
+                            <p:inputTextarea value="#{documentoBean.documento.descricao}"
+                                             maxlength="100"
+                                             cols="50"
+                                             rows="4"
+                                             styleClass="upper"
+                                             autoResize="false"
+                                             id="dne"
+                                             style="resize: none;"
+                                             disabled="#{documentoBean.documento.id ne null and documentoBean.edicao eq false}"
+                                             />
+
+                            <p:outputLabel value="Arquivo:" for="adne"/>
+
+                            <h:panelGroup rendered="#{documentoBean.documento.id ne null}">
+                            <p:commandButton value="Download Arquivo"
+                                             ajax="false"
+                                             rendered="#{documentoBean.documento.id ne null}"
+                                             onclick="PrimeFaces.monitorDownload(start, stop);"
+                                             icon="ui-icon-arrowthick-1-s">
+                                <p:fileDownload value="#{documentoBean.fazerDownload()}" />
+                            </p:commandButton>
+                                <p:spacer width="50" height="0"/>
+                            <p:commandButton value="Visualizar PDF"
+                                             icon="ui-icon-search"
+                                             immediate="true"
+                                             actionListener="#{documentoBean.verDoc(documentoBean.documento)}"
+                                             style="background:green !important"
+                                             onstart="PF('statusDialog').show()" 
+                                             onsuccess="PF('statusDialog').hide();"
+                                             oncomplete="javascript();atualizaTabela(480)"
+                                             />
+                            </h:panelGroup>
+
+                            <h:panelGroup id="a" rendered="#{documentoBean.documento.id eq null}">
+                                <h:outputText value="#{documentoBean.nomeArquivo}"
+                                              rendered="#{documentoBean.nomeArquivo.length() gt 0}"/>
+                                <p:spacer  width="50" height="0"/>
+                                <p:commandButton value="trocar arquivo"
+                                                 update=":documento:a"
+                                                 immediate="true"
+                                                 onstart="PF('statusDialog').show();"
+                                                 onsuccess="PF('statusDialog').hide();"
+                                                 oncomplete="javascript();"
+                                                 rendered="#{documentoBean.nomeArquivo.length() gt 0}"
+                                                 actionListener="#{documentoBean.trocarArquivo()}">
+                                    <p:confirm header="Confirmação" message="Tem certeza?" icon="ui-icon-alert" />
+                                </p:commandButton>
+
+                                <p:fileUpload id="adne" 
+                                              rendered="#{documentoBean.nomeArquivo.length() eq 0}"
+                                              mode="advanced" 
+                                              required="true"                                           
+                                              style="margin-top: 15px;"
+                                              requiredMessage="É necessário o envio de pelo menos um arquivo!"
+                                              allowTypes="/(\.|\/)(pdf)$/"
+                                              invalidFileMessage="Tipo de arquivo não permitido( apenas pdf)" 
+                                              invalidSizeMessage="Tamanho excedido(50mb)" 
+                                              uploadLabel="Enviar PDF"
+                                              fileLimit="1"
+                                              fileLimitMessage="Apenas um arquivo"
+                                              dragDropSupport="true"
+                                              cancelLabel="Cancelar"  
+                                              label="Selecionar..." 
+                                              multiple="false"
+                                              sizeLimit="52428800" 
+                                              update=":documento:a"
+                                              fileUploadListener="#{documentoBean.enviarArquivo}"
+                                              onstart="PF('statusDialog').show();"
+                                              oncomplete="javascript();"/> 
+                            </h:panelGroup>
+
+                            <p:outputLabel value="Tipo Documento:" for="nust" />
+                            <p:selectOneMenu value="#{documentoBean.documento.tipoDocumento.id}"
+                                             id="nust"
+                                             disabled="#{documentoBean.documento.id ne null and documentoBean.edicao eq false}"
+                                             filterMatchMode="contains"
+                                             filter="true">
+                                <f:selectItem itemLabel="selecione..."/>
+                                <f:selectItems value="#{tipoDocumentoBean.tipoDocumentos}"
+                                               var="tu"
+                                               itemValue="#{tu.id}"
+                                               itemLabel="#{tu.descricao}"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Usuario:"
+                                           rendered="#{documentoBean.documento.id ne null}"/>
+                            <h:outputText value="#{documentoBean.documento.usuario.usuario}"
+                                          rendered="#{documentoBean.documento.id ne null}"/>
+
+
+                        </p:panelGrid>
+                    </p:panel>
+                </h:form>
+                
+                  <p:dialog widgetVar="pdf"
+                          header="Arquivo PDF"
+                          footer="Arquivo PDF"
+                          width="900"
+                          height="400"
+                          resizable="false"
+                          maximizable="false"
+                          closable="true"
+                          closeOnEscape="true"
+                          modal="true"
+                          appendTo="@(body)">
+
+                    <h:form id="pdf">
+                        <p:media 
+                            player="pdf" 
+                            value="/resources/arquivos/#{documentoBean.nomeArquivo}"
+                            width="100%"
+                            height="390"/>
+                    </h:form>
+                </p:dialog>
+
+
+
+                <script>
+                    $(document).ready(function () {
+                        atualizaTabela(220);
+                        //$("#documento:txt").focus();
+
+                    });
+                    function start() {
+                        PF('statusDialog').show();
+                    }
+                    function stop() {
+                        PF('statusDialog').hide();
+                    }
+
+                </script>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+
+</html>

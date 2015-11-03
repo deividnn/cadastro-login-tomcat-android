@@ -1,0 +1,217 @@
+
+
+label.ui-outputlabel.ui-widget{
+    font-weight: bold !important;
+}
+
+.ui-outputlabel{
+  font-weight: bold !important;  
+}
+
+.ui-stack{
+    margin-bottom:20px !important;
+}
+
+td.fc-day.fc-sun{
+    background: #AFAFAF;
+}
+
+td.fc-day.fc-sat{
+    background: threedlightshadow;
+}
+
+.ui-datatable .ui-datatable-data .ui-datatable-odd td{    
+    background-color: #FFFFFF;  
+}  
+
+.ui-datatable .ui-datatable-data .ui-datatable-even td{    
+    background-color: #ebeaea;  
+}
+
+.ui-datatable .ui-datatable-data .ui-state-highlight td {
+    background-color: #AFAFAF; 
+}
+
+.ui-datatable .ui-datatable-data .ui-state-error td {
+    background-color: red; 
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active{
+    background: #0078AE !important;
+}
+
+.ui-state-highlight .ui-icon{
+    background-image: url("/educacao/javax.faces.resource/images/ui-icons_e0fdff_256x240.png.jsf?ln=primefaces-start");
+}
+
+.ui-state-active .ui-icon{
+    background-image: url("/educacao/javax.faces.resource/images/ui-icons_e0fdff_256x240.png.jsf?ln=primefaces-start");
+}
+
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight{
+    border: 1px solid white !important;
+}
+
+.ui-state-active{
+    border: 1px solid white !important;
+}
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight{
+    color: darkblue  !important;
+}
+
+.ui-panel .ui-panel-content{
+    padding: 0 10px !important;
+}
+
+body {
+    background-color: #ffffff;
+    font-size: 9px;
+    font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    color: #000000;  
+    margin: 10px;
+}
+
+a{text-decoration: none}
+
+.btn_menu{
+    width: 70px;
+    margin: 4px;
+    float:left;
+    //text-align: center;
+}
+
+.arrow{
+    width: 35px;
+}
+
+ui-outputlabel
+
+.semBorda tr, .semBorda td {  
+    border: none !important;  
+}
+
+.ui-panelgrid tr, .ui-panelgrid td {  
+    border: none !important;  
+}
+
+.upper{text-transform:uppercase}
+
+
+ul.ui-menu-child {
+    white-space: nowrap;
+    width: 190px!important;
+}
+
+
+/* 
+    Created on : 05/03/2015, 15:59:23
+    Author     : Ana
+*/
+
+
+
+.imagem_de_fundo{
+    background-image: url("#{request.contextPath}/resources/img/icons/fundologo.jpg");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-attachment: fixed;
+}
+
+.imagem_de_fundo_interna{
+    background-image: url("#{request.contextPath}/resources/img/icons/fundo.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    overflow: hidden;
+    background-attachment: fixed;
+
+}
+
+.ui-panelgrid  tr, .ui-panelgrid  td {  
+    border: none !important;  
+}
+
+.geral{
+    position:relative;
+    width:950px; 
+    height:220px; 
+    margin: 0 auto;
+    text-align: center;
+
+}
+.principal{
+    top: 30px;
+    position:relative;
+    width:950px; 
+    height:220px; 
+    margin: 0 auto;
+    text-align: center;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+#faixa { 
+    background-color: #2191C1; 
+    width: 100%;
+    height: 40px;
+    position: absolute; 
+} 
+
+p{
+    font-size: 12px; 
+    color: #545454;
+    font-weight: bold !important;
+}
+
+
+.btn{
+    width: 80px;
+    height: 90px;
+    margin:2px;
+    float:left;
+    text-align: center; 
+    padding-right: 35px;
+    font-size: 10px;
+    font-weight: bold
+}
+
+.btn img{
+    width: 60px;
+    height: 60px;
+}
+
+.botoes{
+    font-weight:bolder;
+    font-size: 9px;
+}
+
+
+.btnn{
+    width: 60px;
+    margin: 2px;
+    float:left;
+    text-align: center;
+}
+
+.rodape{
+
+    background: #555;
+    color: floralwhite;
+    font-size: 12px;
+    text-align: center;
+    margin-top: 130px;
+    border: none;
+
+}
+
+#topo{
+    color: black;
+    text-align: center;
+    font-weight: bolder;
+}
+
+#site { width: 600px; margin: 20px auto 0 auto }
+#mapa { width: 400px; height: 400px; float: left; }
+#trajeto-texto { width: 200px; height: 420px; float: right; overflow: scroll }
